@@ -28,14 +28,18 @@ public class Chooser extends CordovaPlugin {
 
 	/** @see https://stackoverflow.com/a/17861016/459881 */
 	public static byte[] getBytesFromInputStream (InputStream is) throws IOException {
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		byte[] buffer = new byte[0xFFFF];
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-		for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
-			os.write(buffer, 0, len);
+		int nRead;
+		byte[] data = new byte[4];
+
+		while ((nRead = is.read(data, 0, data.length)) != -1) {
+			buffer.write(data, 0, nRead);
 		}
 
-		return os.toByteArray();
+		buffer.flush();
+		byte[] targetArray = buffer.toByteArray();
+		return targetArray;
 	}
 
 	/** @see https://stackoverflow.com/a/23270545/459881 */
